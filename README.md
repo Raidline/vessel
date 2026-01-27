@@ -57,16 +57,15 @@ Focus: Establishing the Monadic core.
 ### Phase 2: The Bridge (Legacy Interop)
 Focus: Making Vessel play nice with standard Java libraries.
 
-- [ ] Vessel.lift(): Static factory to catch Exception and wrap into a Failure.
-- [ ] Safe Exits: Implement getOrElse(V defaultValue) and getOrThrow().
-- [ ] Side-Effect Hooks: onSuccess(Consumer) and onFailure(Consumer) for logging/telemetry.
+- [x] Vessel.lift(): Static factory to catch Exception and wrap into a Failure.
+- [x] Side-Effect Hooks: peek(Consumer) and peekError(Consumer) for logging/telemetry.
 
 ### Phase 3: The Transformer (Advanced Logic)
 Focus: Domain-specific logic and error recovery.
 
-- [ ] mapError: Transform error types (e.g., SQLException → DatabaseError).
-- [ ] recover: Jump back from the Failure track using a fallback function.
-- [ ] filter: Convert a Success to a Failure based on a Predicate.
+- [x] mapError: Transform error types (e.g., SQLException → DatabaseError).
+- [x] recover: Jump back from the Failure track using a fallback function.
+- [x] filter: Convert a Success to a Failure based on a Predicate.
 
 ### Phase 4: The Multi-Track (Combining Results)
 Focus: Coordinating multiple independent results.
