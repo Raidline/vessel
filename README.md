@@ -49,35 +49,35 @@ This roadmap outlines the evolution of the library from core types to advanced c
 ### Phase 1: The Foundation (MVP)
 Focus: Establishing the Monadic core.
 
-- [] Core Types: Implement Vessel<V, E>
-- [] Functor Ops: Implement .map(Function<V, U>) to transform values.
-- [] Monad Ops: Implement .flatMap(Function<V, Vessel<U, E>>) for operation chaining.
-- [] Inspection: Add isSuccess() and isFailure() utility methods.
+- [x] Core Types: Implement Vessel<V, E>
+- [x] Functor Ops: Implement .map(Function<V, U>) to transform values.
+- [x] Monad Ops: Implement .flatMap(Function<V, Vessel<U, E>>) for operation chaining.
+- [x] Inspection: Add isSuccess() and isFailure() utility methods.
 
 ### Phase 2: The Bridge (Legacy Interop)
 Focus: Making Vessel play nice with standard Java libraries.
 
-- [] Vessel.lift(): Static factory to catch Exception and wrap into a Failure.
-- [] Safe Exits: Implement getOrElse(V defaultValue) and getOrThrow().
-- [] Side-Effect Hooks: onSuccess(Consumer) and onFailure(Consumer) for logging/telemetry.
+- [ ] Vessel.lift(): Static factory to catch Exception and wrap into a Failure.
+- [ ] Safe Exits: Implement getOrElse(V defaultValue) and getOrThrow().
+- [ ] Side-Effect Hooks: onSuccess(Consumer) and onFailure(Consumer) for logging/telemetry.
 
 ### Phase 3: The Transformer (Advanced Logic)
 Focus: Domain-specific logic and error recovery.
 
-- [] mapError: Transform error types (e.g., SQLException → DatabaseError).
-- [] recover: Jump back from the Failure track using a fallback function.
-- [] filter: Convert a Success to a Failure based on a Predicate.
+- [ ] mapError: Transform error types (e.g., SQLException → DatabaseError).
+- [ ] recover: Jump back from the Failure track using a fallback function.
+- [ ] filter: Convert a Success to a Failure based on a Predicate.
 
 ### Phase 4: The Multi-Track (Combining Results)
 Focus: Coordinating multiple independent results.
 
-- [] zip: Combine two independent Vessels into a single result (e.g., merging two API calls).
-- [] sequence: Transform List<Vessel<V, E>> into Vessel<List<V>, E>.
-- [] traverse: Map a list of items to Vessels and sequence them in a single pass.
+- [ ] zip: Combine two independent Vessels into a single result (e.g., merging two API calls).
+- [ ] sequence: Transform List<Vessel<V, E>> into Vessel<List<V>, E>.
+- [ ] traverse: Map a list of items to Vessels and sequence them in a single pass.
 
 Phase 5: The Speedster (Async & Streams)
 Focus: Performance and high-scale execution.
 
-- [] AsyncVessel: Create a specialized wrapper for CompletableFuture<Vessel<V, E>>.
-- [] Stream Collector: A custom Collector to gather a stream of results into one Vessel.
-- [] Concurrency: Implement race() (first result wins) and allSettled().
+- [ ] AsyncVessel: Create a specialized wrapper for CompletableFuture<Vessel<V, E>>.
+- [ ] Stream Collector: A custom Collector to gather a stream of results into one Vessel.
+- [ ] Concurrency: Implement race() (first result wins) and allSettled().
