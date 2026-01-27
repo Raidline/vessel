@@ -1,10 +1,11 @@
 package pt.raidline.vessel;
 
+import pt.raidline.vessel.exception.MergeZipFailureException;
 import pt.raidline.vessel.exception.ValueNotPresentException;
 import pt.raidline.vessel.lambdas.Throwing;
 
 import java.util.Objects;
-import java.util.function.Consumer;
+import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
@@ -28,6 +29,66 @@ public sealed interface Vessel<V, E extends Exception> permits Failure, Success 
     static <V, E extends Exception> Vessel<V, E> failure(E err) {
         Objects.requireNonNull(err, "You cannot pass a [null] value as an err");
         return new Failure<>(err);
+    }
+
+    static <R, T, V, E extends Exception> Vessel<R, E> zip(Vessel<V, E> first,
+                                                           Vessel<T, E> second,
+                                                           BiFunction<V, T, R> merger) {
+
+        Objects.requireNonNull(first);
+        Objects.requireNonNull(second);
+        Objects.requireNonNull(merger);
+
+        if (first.isFailure() && second.isFailure()) {
+            var f1 = (Failure<V, E>) first;
+            var f2 = (Failure<T, E>) second;
+
+            return new Failure<>((E) new MergeZipFailureException(
+                    "Both of the vessels are failure types",
+                    f1.ex(),
+                    f2.ex()
+            ));
+        }
+
+        if (first.isFailure()) {
+            return (Vessel<R, E>) first.mapError(e -> new MergeZipFailureException("First vessel has failed",
+                    e,
+                    null));
+        }
+
+        if (second.isFailure()) {
+            return (Vessel<R, E>) second.mapError(e -> new MergeZipFailureException("Second vessel has failed",
+                    e,
+                    null));
+        }
+
+        var s1 = (Success<V, E>) first;
+        var s2 = (Success<T, E>) second;
+
+        return success(merger.apply(s1.value(), s2.value()));
+    }
+
+    static <V, E extends Exception> Vessel<V, E> oneOf(Vessel<V, E> first, Vessel<V, E> second) {
+
+        Objects.requireNonNull(first);
+        Objects.requireNonNull(second);
+
+        if (first.isFailure() && second.isFailure()) {
+            var f1 = (Failure<V, E>) first;
+            var f2 = (Failure<V, E>) second;
+
+            return new Failure<>((E) new MergeZipFailureException(
+                    "Both of the vessels are failure types",
+                    f1.ex(),
+                    f2.ex()
+            ));
+        }
+
+        if (first.isFailure()) {
+            return second;
+        }
+
+        return first;
     }
 
     default boolean isSuccess() {
