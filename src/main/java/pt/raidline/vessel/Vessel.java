@@ -4,6 +4,7 @@ import pt.raidline.vessel.exception.MergeZipFailureException;
 import pt.raidline.vessel.exception.ValueNotPresentException;
 import pt.raidline.vessel.lambdas.Throwing;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.function.BiFunction;
 import java.util.function.Function;
@@ -89,6 +90,14 @@ public sealed interface Vessel<V, E extends Exception> permits Failure, Success 
         }
 
         return first;
+    }
+
+    static <V, E extends Exception> Vessel<List<V>, E> sequence(List<Vessel<V, E>> items) {
+        return null;
+    }
+
+    static <V, R, E extends Exception> Vessel<List<R>, E> traverse(List<V> items, Function<V, Vessel<R, E>> mapper) {
+        return null;
     }
 
     default boolean isSuccess() {
