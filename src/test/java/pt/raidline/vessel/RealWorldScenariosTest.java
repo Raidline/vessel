@@ -265,7 +265,7 @@ class RealWorldScenariosTest {
         }
 
         Order order = new Order("ORD-001", "123", 100.0);
-        var result = Vessel.<Order, Exception>success(order)
+        var result = Vessel.<Order, UserNotFoundException>success(order)
                 .filter(o -> o.amount() > 0, () -> new ValidationException("Order amount must be positive"))
                 .flatMap(o -> findUserById(o.userId())
                         .mapError(e -> e)
