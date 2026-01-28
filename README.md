@@ -86,4 +86,3 @@ Focus: Performance and high-scale execution.
 
 - [x] Stream Collector: A custom Collector to gather a stream of results into one Vessel.
 - [x] AsyncVessel: Create a specialized wrapper for CompletableFuture<Vessel<V, E>>.
-- [ ] Concurrency: Implement race() (first result wins) and allSettled().
