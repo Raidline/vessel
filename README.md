@@ -77,8 +77,8 @@ Focus: Coordinating multiple independent results.
 
 - [x] zip: Combine two independent Vessels into a single result (e.g., merging two API calls).
 - [x] oneOf: Choose one of two independent Vessels into a single result. (If both are success the first wins)
-- [ ] sequence: Transform List<Vessel<V, E>> into Vessel<List<V>, E>.
-- [ ] traverse: Map a list of items to Vessels and sequence them in a single pass.
+- [x] sequence: Transform List<Vessel<V, E>> into Vessel<List<V>, E>.
+- [x] traverse: Map a list of items to Vessels and sequence them in a single pass.
 
 Phase 5: The Speedster (Async & Streams)
 Focus: Performance and high-scale execution.
