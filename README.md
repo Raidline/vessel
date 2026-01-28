@@ -1,5 +1,7 @@
 # 🏺 Vessel
 
+[![](https://jitpack.io/v/Raidline/vessel.svg)](https://jitpack.io/#Raidline/vessel)
+
 **Vessel** is a lightweight, type-safe functional error-handling library for Modern Java (21+).
 
 It replaces the "hidden trapdoor" of Runtime Exceptions with explicit, composable **Result types**, allowing you to
