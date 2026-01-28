@@ -1,6 +1,6 @@
 package pt.raidline.vessel.exception;
 
-public class MergeZipFailureException extends Exception {
+public class MergeZipFailureException extends RuntimeException {
     public final Exception first;
     public final Exception second;
 

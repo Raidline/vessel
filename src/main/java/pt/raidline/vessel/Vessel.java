@@ -4,6 +4,7 @@ import pt.raidline.vessel.exception.MergeZipFailureException;
 import pt.raidline.vessel.exception.ValueNotPresentException;
 import pt.raidline.vessel.lambdas.Throwing;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.BiFunction;
@@ -66,7 +67,7 @@ public sealed interface Vessel<V, E extends Exception> permits Failure, Success 
         var s1 = (Success<V, E>) first;
         var s2 = (Success<T, E>) second;
 
-        return success(merger.apply(s1.value(), s2.value()));
+        return lift(() -> merger.apply(s1.value(), s2.value()));
     }
 
     static <V, E extends Exception> Vessel<V, E> oneOf(Vessel<V, E> first, Vessel<V, E> second) {
@@ -93,11 +94,35 @@ public sealed interface Vessel<V, E extends Exception> permits Failure, Success 
     }
 
     static <V, E extends Exception> Vessel<List<V>, E> sequence(List<Vessel<V, E>> items) {
-        return null;
+        List<V> accumulator = new ArrayList<>(items.size());
+
+        for (Vessel<V, E> item : items) {
+            if (item instanceof Success<V, E> s) {
+                accumulator.add(s.get());
+            }
+            if (item instanceof Failure<V, E>(E ex)) {
+                return failure(ex);
+            }
+        }
+
+        return success(accumulator);
     }
 
-    static <V, R, E extends Exception> Vessel<List<R>, E> traverse(List<V> items, Function<V, Vessel<R, E>> mapper) {
-        return null;
+    static <V, R, E extends Exception> Vessel<List<R>, E> traverse(List<V> items,
+                                                                   Function<V, Vessel<R, E>> mapper) {
+        List<R> results = new ArrayList<>(items.size());
+
+        for (V item : items) {
+            Vessel<R, E> vessel = mapper.apply(item);
+
+            if (vessel instanceof Success<R, E>(R value)) {
+                results.add(value);
+            } else if (vessel instanceof Failure<R, E>(E ex)) {
+                return new Failure<>(ex);
+            }
+        }
+
+        return new Success<>(results);
     }
 
     default boolean isSuccess() {
@@ -110,7 +135,7 @@ public sealed interface Vessel<V, E extends Exception> permits Failure, Success 
 
     default <R> Vessel<R, E> map(Function<V, R> mapper) {
         if (this instanceof Success<V, E>(V value)) {
-            return new Success<>(mapper.apply(value));
+            return flatMap(__ -> lift(() -> mapper.apply(value)));
         }
 
         return (Vessel<R, E>) this;
