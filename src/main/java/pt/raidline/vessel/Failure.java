@@ -40,6 +40,6 @@ public record Failure<V, E extends Exception>(E ex) implements Vessel<V, E> {
     public <T> Vessel<T, E> recover(Function<E, T> transformer) {
         Objects.requireNonNull(transformer);
 
-        return new Success<>(transformer.apply(ex));
+        return Vessel.lift(() -> transformer.apply(ex));
     }
 }
