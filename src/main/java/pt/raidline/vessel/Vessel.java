@@ -11,6 +11,7 @@ import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
+import java.util.stream.Collector;
 
 public sealed interface Vessel<V, E extends Exception> permits Failure, Success {
 
@@ -123,6 +124,41 @@ public sealed interface Vessel<V, E extends Exception> permits Failure, Success 
         }
 
         return new Success<>(results);
+    }
+
+
+    static <V, E extends Exception> Collector<Vessel<V, E>, ?, Vessel<List<V>, E>> collectFromStream() {
+
+        class Acc {
+            Vessel<List<V>, E> result = new Success<>(new ArrayList<>());
+
+            void accumulate(Vessel<V, E> next) {
+                if (result instanceof Success<List<V>, E>(List<V> items)) {
+                    if (next instanceof Success<V, E>(V value)) {
+                        items.add(value);
+                    } else if (next instanceof Failure<V, E>(E ex)) {
+                        result = new Failure<>(ex);
+                    }
+                }
+            }
+
+            Acc combine(Acc other) {
+                if (this.result instanceof Success<List<V>, E>(List<V> items) &&
+                        other.result instanceof Success<List<V>, E>(List<V> value)) {
+                    items.addAll(value);
+                    return this;
+                }
+                return (this.result instanceof Failure) ? this : other;
+            }
+        }
+
+        return Collector.of(
+                Acc::new,
+                Acc::accumulate,
+                Acc::combine,
+                acc -> acc.result,
+                Collector.Characteristics.UNORDERED
+        );
     }
 
     default boolean isSuccess() {

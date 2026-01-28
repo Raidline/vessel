@@ -80,9 +80,10 @@ Focus: Coordinating multiple independent results.
 - [x] sequence: Transform List<Vessel<V, E>> into Vessel<List<V>, E>.
 - [x] traverse: Map a list of items to Vessels and sequence them in a single pass.
 
-Phase 5: The Speedster (Async & Streams)
+### Phase 5: The Speedster (Async & Streams)
+
 Focus: Performance and high-scale execution.
 
+- [x] Stream Collector: A custom Collector to gather a stream of results into one Vessel.
 - [ ] AsyncVessel: Create a specialized wrapper for CompletableFuture<Vessel<V, E>>.
-- [ ] Stream Collector: A custom Collector to gather a stream of results into one Vessel.
 - [ ] Concurrency: Implement race() (first result wins) and allSettled().
